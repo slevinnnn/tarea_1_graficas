@@ -128,19 +128,19 @@ def updateChunks(resolucion, camara, controller, pipeline):
     x_pos = camara.position[0]
     z_pos = camara.position[2]
 
-    current_center = (
+    posicoin_actual = (
         int(np.floor(x_pos / resolucion)),
         int(np.floor(z_pos / resolucion)),
     )
 
-    if current_center != controller.centerChunk:
-        center_x, center_z = current_center
+    if posicoin_actual != controller.centerChunk:
+        center_x, center_z = posicoin_actual
         controller.currentChunks = [
             (center_x + offset_x, center_z + offset_z)
             for offset_z in (-1, 0, 1)
             for offset_x in (-1, 0, 1)
         ]
-        controller.centerChunk = current_center
+        controller.centerChunk = posicoin_actual
 
         # tendrán que utilizar la función anterior para
         # generar los vertex_list de los chunks cuando corresponda:
