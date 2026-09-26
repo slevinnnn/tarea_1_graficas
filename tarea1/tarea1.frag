@@ -4,7 +4,7 @@
 
 // ================================================================
 in vec3 fragPos;
-in vec3 fragNormal
+in vec3 fragNormal;
 out vec4 outColor;
 
 

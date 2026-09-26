@@ -10,6 +10,7 @@ from pyglet.window import Window, key
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from terrain import *
 
+import grafica.transformations as tr
 from utils.helpers import init_axis, init_pipeline
 
 # Clase Controller: gestiona la ventana y almacena las variables globales del programa
@@ -45,7 +46,7 @@ if __name__ == "__main__":
     # Se utilizarán los shaders tarea1.vert y tarea1.frag
     pipeline = init_pipeline(root + "/tarea1.vert", root + "/tarea1.frag")
     # pipeline para el sol
-    pipeline_sol = init_pipeline(root + "/tarea1_sol_pauta.vert", root + "/tarea1_sol_pauta.frag")
+    pipeline_sol = init_pipeline(root + "/tarea1_sol.vert", root + "/tarea1_sol.frag")
     # Se determina n la resolución de los chunks
     # Cada chunk se compondrá de n x n cuadrados
     n = 25
@@ -56,10 +57,15 @@ if __name__ == "__main__":
     # Se declara un axis, este objeto permite mostrar en pantalla un objeto que simula 3 ejes
     # Mostrando con claridad cual es el eje X, Y, Z
     # Se puede remover o dejar.
-    axis = init_axis(cam)
+    #axis = init_axis(cam)
 
     # ====== COMPLETAR: Aqui hacer la geometría y el vertex_list del sol ========
     DEFINITION = 100
+    sun_vertices = createSunVertices(0.0, 0.0, 1.5, DEFINITION)
+    sun_indices = createSunIndices(DEFINITION)
+    sun_gpu = pipeline_sol.vertex_list_indexed(DEFINITION + 1, GL_TRIANGLES, sun_indices)
+    sun_gpu.position[:] = sun_vertices
+    elapsed_time = [0.0]
 
     # ===== Función draw =====
     # Esta función contiene la lógica que se realiza cada vez que se dibuja un nuevo frame
@@ -87,20 +93,31 @@ if __name__ == "__main__":
         # Esta instrucción activa el pipeline del sol
         pipeline_sol.use()
         # ===== COMPLETAR CON LOS UNIFORMS DEL SOL y EL OBJETO EN SI======
+        pipeline_sol["u_view"] = cam.get_view()
+        pipeline_sol["u_projection"] = cam.get_projection()
+        sun_transform = tr.translate(0.0, 5.0 + np.sin(elapsed_time[0]), 0.0)
+        pipeline_sol["u_transform"] = np.reshape(sun_transform, (16, 1), order="F")
+        sun_gpu.draw(GL_TRIANGLES)
 
 
         # Esta instrucción activa el pipeline de los chunks
         pipeline.use()
 
         # ===== COMPLETAR CON LOS OBJETOS A DIBUJAR Y UNIFORMS ======
+        pipeline["u_view"] = cam.get_view()
+        pipeline["u_projection"] = cam.get_projection()
+        for gpu_chunk in controller.gpu_chunks:
+            gpu_chunk.draw(GL_TRIANGLES)
 
         # Opcionalmente se dibujan los ejes
-        axis.draw()
+        #axis.draw()
 
     # ====== Función Update =======
     # Esta función es similar a draw(), pero se encarga de actualizar los estados de los objetos
     # Objetos como la cámara u objetos en movimiento se actualizarán aquí
     def update(dt):
+
+        elapsed_time[0] += dt
 
         # Esta función actualiza la lista de chunks que es visible actualmente
         # En caso de que sea necesario crear nuevos chunks
@@ -108,7 +125,7 @@ if __name__ == "__main__":
         updateChunks(n, cam, controller, pipeline)
 
         # Esta función actualiza los ejes, de no existir ejes, no es necesario llamarla
-        axis.update()
+        #axis.update()
 
         # Esta función actualiza la cámara en función del input del teclado
         cam.time_update(dt)
