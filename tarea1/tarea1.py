@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     # ====== COMPLETAR: Aqui hacer la geometría y el vertex_list del sol ========
     DEFINITION = 100
-    sun_vertices = createSunVertices(0.0, 0.0, 1.5, DEFINITION)
+    sun_vertices = createSunVertices(0.0, 0.0, 2.0, DEFINITION)
     sun_indices = createSunIndices(DEFINITION)
     sun_gpu = pipeline_sol.vertex_list_indexed(DEFINITION + 1, GL_TRIANGLES, sun_indices)
     sun_gpu.position[:] = sun_vertices
