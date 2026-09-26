@@ -97,20 +97,20 @@ def makeChunks(resolucion, controller, pipeline):
 
     for chunk_x, chunk_z in controller.currentChunks:
         vertices, indices = generateChunkVertices(resolucion, chunk_x, chunk_z)
-        positions = []
-        normals = []
+        posiciones = []
+        normales = []
 
         for vertex_start in range(0, len(vertices), 6):
-            positions.extend(vertices[vertex_start:vertex_start + 3])
-            normals.extend(vertices[vertex_start + 3:vertex_start + 6])
+            posiciones.extend(vertices[vertex_start:vertex_start + 3])
+            normales.extend(vertices[vertex_start + 3:vertex_start + 6])
 
         gpu_chunk = pipeline.vertex_list_indexed(
-            len(positions) // 3,
+            len(posiciones) // 3,
             GL_TRIANGLES,
             indices,
         )
-        gpu_chunk.position[:] = positions
-        gpu_chunk.normal[:] = normals
+        gpu_chunk.position[:] = posiciones
+        gpu_chunk.normal[:] = normales
         controller.gpu_chunks.append(gpu_chunk)
 
 
@@ -127,9 +127,6 @@ def updateChunks(resolucion, camara, controller, pipeline):
     # a continuación se muestra cómo obtener la posicion de la camara en x y z
     x_pos = camara.position[0]
     z_pos = camara.position[2]
-
-    if resolucion <= 0:
-        raise ValueError("La resolución del chunk debe ser positiva")
 
     current_center = (
         int(np.floor(x_pos / resolucion)),

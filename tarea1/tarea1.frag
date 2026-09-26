@@ -3,6 +3,9 @@
 // ===== COMPLETAR: Defina los valores de entrada y de salida =====
 
 // ================================================================
+in vec3 fragPos;
+in vec3 fragNormal
+out vec4 outColor;
 
 
 // La siguiente función se le entrega hecha y no debe modificarla :)

@@ -3,6 +3,8 @@
 // ===== COMPLETAR: Defina los valores de entrada y de salida =====
 
 // ================================================================
+in vec3 fragPos;
+out vec4 outColor;
 
 
 // Programa pricipal
