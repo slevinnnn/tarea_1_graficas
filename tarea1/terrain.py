@@ -100,9 +100,9 @@ def makeChunks(resolucion, controller, pipeline):
         posiciones = []
         normales = []
 
-        for vertex_start in range(0, len(vertices), 6):
-            posiciones.extend(vertices[vertex_start:vertex_start + 3])
-            normales.extend(vertices[vertex_start + 3:vertex_start + 6])
+        for i in range(0, len(vertices), 6):
+            posiciones.extend(vertices[i:i + 3])
+            normales.extend(vertices[i + 3:i + 6])
 
         gpu_chunk = pipeline.vertex_list_indexed(
             len(posiciones) // 3,
