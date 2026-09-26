@@ -22,6 +22,7 @@ class Controller(Window):
         self.sky_color = np.array([96/255, 194/255, 224/255])
         self.intensity = 0.9
         self.wireframe = False
+        self.time = 0.0
 
 
         #======== Variables para la generación de terreno =======
@@ -65,7 +66,7 @@ if __name__ == "__main__":
     sun_indices = createSunIndices(DEFINITION)
     sun_gpu = pipeline_sol.vertex_list_indexed(DEFINITION + 1, GL_TRIANGLES, sun_indices)
     sun_gpu.position[:] = sun_vertices
-    elapsed_time = [0.0]
+    #elapsed_time = [0.0]
 
     # ===== Función draw =====
     # Esta función contiene la lógica que se realiza cada vez que se dibuja un nuevo frame
@@ -95,7 +96,7 @@ if __name__ == "__main__":
         # ===== COMPLETAR CON LOS UNIFORMS DEL SOL y EL OBJETO EN SI======
         pipeline_sol["u_view"] = cam.get_view()
         pipeline_sol["u_projection"] = cam.get_projection()
-        sun_transform = tr.translate(0.0, 5.0 + np.sin(elapsed_time[0]), 0.0)
+        sun_transform = tr.translate(0.0, 5.0 + np.sin(controller.time*3), 0.0)
         pipeline_sol["u_transform"] = np.reshape(sun_transform, (16, 1), order="F")
         sun_gpu.draw(GL_TRIANGLES)
 
@@ -117,8 +118,8 @@ if __name__ == "__main__":
     # Objetos como la cámara u objetos en movimiento se actualizarán aquí
     def update(dt):
 
-        elapsed_time[0] += dt
-
+        #elapsed_time[0] += dt
+        controller.time += dt
         # Esta función actualiza la lista de chunks que es visible actualmente
         # En caso de que sea necesario crear nuevos chunks
         # ===== COMPLETAR: Esta función deben implementarla en el modulo terrain.py ======

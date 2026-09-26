@@ -66,7 +66,7 @@ def generateChunkVertices(n, chunk_x, chunk_z):
         for x in range(n + 1):
             world_x = chunk_origin_x + x
             world_z = chunk_origin_z + z
-            height = noise([world_x / 10.0, world_z / 10.0]) * 2.0
+            height = noise([world_x / 10.0, world_z / 10.0]) * 3.5
             posiciones.extend([world_x, height, world_z])
 
     row_size = n + 1
